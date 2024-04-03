@@ -3,7 +3,7 @@ const loadAllCustomerCode = () => {
     $('#customer_id').append("<option selected>Select customer code</option>");
 
     $.ajax({
-        url: "http://localhost:8081/mini_pos_war_exploded/customer",
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/customer",
         method: "GET",
         dataType: "json",
         success: function (resp) {
@@ -37,13 +37,13 @@ const loadAllItemCode = () => {
     $('#order_item_id').append("<option selected>Select item code</option>");
 
     $.ajax({
-        url: "http://localhost:8081/mini_pos_war_exploded/item",
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/item",
         method: "GET",
         dataType: "json",
         success: function (resp) {
             console.log(resp);
             for (const item of resp) {
-                let option = `<option data-description="${item.description}" data-unitPrice="${item.unitPrice}" data-qty="${item.qty}">${item.code}</option>;`
+                let option = `<option data-description="${item.description}" data-unitPrice="${item.unitPrice}" data-qty="${item.qty}">${item.item_code}</option>;`
 
                 $("#order_item_id").append(option);
             }
@@ -215,7 +215,7 @@ $("#place_ord").click(function () {
     $.ajax({
         method: "POST",
         contentType: "application/json",
-        url: "http://localhost:8081/mini_pos_war_exploded/orders",
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/orders",
         data: JSON.stringify({
             order_id: order_id,
             customer_id: customer_id,
@@ -237,7 +237,7 @@ $("#place_ord").click(function () {
 const loadAllOrders = () => {
     $("#place-tbl-body").empty();
     $.ajax({
-        url: "http://localhost:8081/mini_pos_war_exploded/orders",
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/orders",
         method: "GET",
         dataType: "json",
         success: function (resp) {
