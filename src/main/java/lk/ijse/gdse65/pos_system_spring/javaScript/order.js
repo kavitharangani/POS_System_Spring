@@ -5,7 +5,8 @@ const loadAllCustomerCode = () => {
     $.ajax({
         url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/customer",
         method: "GET",
-        dataType: "json",
+        processData: false,
+        contentType: false,
         success: function (resp) {
             console.log(resp);
             for (const customer of resp) {
@@ -39,7 +40,8 @@ const loadAllItemCode = () => {
     $.ajax({
         url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/item",
         method: "GET",
-        dataType: "json",
+        processData: false,
+        contentType: false,
         success: function (resp) {
             console.log(resp);
             for (const item of resp) {
@@ -79,18 +81,18 @@ $("#unit_price, #qty_on_hand").on("input", updateTotal);
 
 let itemsArray = [
     { item_id: '1', description: 'Item 1', qty: 10, item_price: 5.00 },
-    { item_id: '2', description: 'Item 2', qty: 20, item_price: 10.00 },
-    // Add more items as needed
 ];
 
 function loadItemData() {
-    // Implement your loadItemData logic here
-    // This is just a placeholder
+
 }
 
 function updateTotal() {
-    // Implement your updateTotal logic here
-    // This is just a placeholder
+    const unitPrice = parseFloat($("#unit_price").val()) || 0;
+    const quantity = parseInt($("#order_qty").val()) || 0;
+    const total = (unitPrice * quantity);
+    $("#final_total").val(total.toFixed(2));
+    return total;
 }
 
 function addToCart() {
@@ -202,34 +204,28 @@ $("#remove").click(function () {
 });
 
 $("#place_ord").click(function () {
-    let order_id = $("#order_id").val();
-    let customer_id = $("#customer_id").val();
-    let customer_name = $("#customer_name").val();
 
-    // Assuming you have a table with ID order_table_body
-    let $lastRow = $("#order_table_body tr:last");
-    let order_item_id = $lastRow.find('.item_id').text();
-    let description = $lastRow.find('.desc').text();
-    let total = parseFloat($lastRow.find('.total').text());
+    let formData = new FormData();
+    formData.append("order_id", $("#order_id").val());
+    formData.append("customer_id", $("#customer_id").val());
+    formData.append("customer_name", $("#customer_name").val());
+    formData.append("order_item_id", $("#order_item_id").val());
+    formData.append("description", $("#description").val());
+    formData.append("total", $("#final_total").val());
 
     $.ajax({
         method: "POST",
-        contentType: "application/json",
-        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/orders",
-        data: JSON.stringify({
-            order_id: order_id,
-            customer_id: customer_id,
-            customer_name: customer_name,
-            order_item_id: order_item_id,
-            description: description,
-            total: total
-        }),
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/order",
+        async: true,
+        processData: false,
+        contentType: false,
+        data: formData,
         success: function (data) {
-            alert("Order saved successfully!");
-            // You may perform additional actions after a successful save
+            reset();
+            alert("Order saved successfully.");
         },
-        error: function (xhr, exception) {
-            alert("Error occurred while saving order.");
+        error: function (xhr, status, error) {
+            alert("Error: " + error);
         }
     });
 });
@@ -237,13 +233,13 @@ $("#place_ord").click(function () {
 const loadAllOrders = () => {
     $("#place-tbl-body").empty();
     $.ajax({
-        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/orders",
+        url: "http://localhost:8080/POS_system_spring_war_exploded/api/v1/order",
         method: "GET",
         dataType: "json",
         success: function (resp) {
             console.log(resp);
-            for (const orders of resp) {
-                let row = `<tr><td>${orders.order_id}</td><td>${orders.customer_id}</td><td>${orders.customer_name}</td><td>${orders.order_item_id}</td><td>${orders.description}</td><td>${orders.total}</td></tr>;`
+            for (const order of resp) {
+                let row = `<tr><td>${order.order_id}</td><td>${order.customer_id}</td><td>${order.customer_name}</td><td>${order.order_item_id}</td><td>${order.description}</td><td>${order.total}</td></tr>;`
                 $("#place-tbl-body").append(row);
             }
             callMethod()
