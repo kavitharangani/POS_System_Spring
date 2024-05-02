@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>lk.ijse.gdse65</groupId>
-    <artifactId>POS_system_spring</artifactId>
+    <artifactId>shoes_system</artifactId>
     <version>1.0-SNAPSHOT</version>
     <name>POS_system_spring</name>
     <packaging>war</packaging>

@@ -7,7 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="POS_system_spring" />
+        <module name="shoes_system" />
       </profile>
     </annotationProcessing>
   </component>
